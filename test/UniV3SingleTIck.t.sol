@@ -31,6 +31,9 @@ contract UniV3SingleTick is Test, IUniswapV3MintCallback {
         // emit log_named_address("token1", pool.token1());
         // emit log_named_int("spacing", pool.tickSpacing());
 
+        int24 _lDiff = 1; // -200491 - (-200490)
+        int24 _uDiff = -9; // -200500 - (-200491)
+
         int24 _lt = -200690;
         int24 _ut = -200290;
         int24 _spacing = 10;
@@ -40,8 +43,9 @@ contract UniV3SingleTick is Test, IUniswapV3MintCallback {
 
         uint128 _l = LiquidityAmounts.getLiquidityForAmounts(
             currentSqrtPriceX96,
-            _lt.getSqrtRatioAtTick(),
-            _ut.getSqrtRatioAtTick(),
+            // * NOTES: excluding in-range single-tick liquidity
+            (_lt + _lDiff).getSqrtRatioAtTick(),
+            (_ut + _uDiff).getSqrtRatioAtTick(),
             _a0Max,
             _a1Max
         );
